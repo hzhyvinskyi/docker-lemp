@@ -13,5 +13,5 @@ dcps:
 test:
 	sudo docker-compose exec php-fpm vendor/bin/phpunit --colors=always
 
-perm:
+own:
 	sudo chown -R ${USER}:${USER} *

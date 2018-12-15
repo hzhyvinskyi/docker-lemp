@@ -1,24 +1,24 @@
 version: '3.7'
 services:
-    nginx:
+    web:
         image: nginx:latest
         container_name: nginx
         ports:
         - "80:80"
         - "443:443"
         volumes:
-            - ./:/var/www
-            - ./docker/nginx/conf:/etc/nginx/conf.d
-            - ./docker/nginx/logs:/var/log/nginx
+            - ./app:/var/www
+            - ./containers/nginx/conf:/etc/nginx/conf.d
+            - ./logs/nginx:/var/log/nginx
         links:
             - php-fpm
     php-fpm:
         build: 
-            context: ./
-            dockerfile: docker/php-fpm/php-fpm.docker
+            context: ./containers/php
+            dockerfile: Dockerfile
         container_name: php-fpm
         volumes:
-            - ./:/var/www
+            - ./app:/var/www
         links:
             - mysql
     mysql:
@@ -33,5 +33,6 @@ services:
             - MYSQL_USER=appuser
             - MYSQL_PASSWORD=apppwd
         volumes:
-            - ./docker/mysql:/var/lib/mysql
-
+            - ./containers/mysql/conf:/etc/mysql
+            - ./data:/var/lib/mysql
+            - ./logs/mysql:/var/log/mysql
