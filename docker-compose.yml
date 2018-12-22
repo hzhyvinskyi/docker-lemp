@@ -19,6 +19,7 @@ services:
         container_name: php-fpm
         volumes:
             - ./app:/var/www
+            - ./containers/php/conf/php.ini:/usr/local/etc/php/php.ini
         links:
             - mysql
     mysql:
