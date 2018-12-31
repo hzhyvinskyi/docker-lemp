@@ -4,8 +4,8 @@ services:
         image: nginx:latest
         container_name: nginx
         ports:
-        - "80:80"
-        - "443:443"
+            - 80:80
+            - 443:443
         volumes:
             - ./app:/var/www
             - ./containers/nginx/conf:/etc/nginx/conf.d
@@ -13,27 +13,30 @@ services:
         links:
             - php-fpm
     php-fpm:
-        build: 
+        build:
             context: ./containers/php
             dockerfile: Dockerfile
         container_name: php-fpm
         volumes:
             - ./app:/var/www
             - ./containers/php/conf/php.ini:/usr/local/etc/php/php.ini
+        environment:
+            - DB_PORT=3306
+            - DB_HOST=mysql
         links:
             - mysql
     mysql:
         image: mysql:5.7
-        ports:
-            - "3306:3306"
         container_name: mysql
         restart: always
+        volumes:
+            - ./containers/mysql/conf:/etc/mysql
+            - ./data:/var/lib/mysql
+            - ./logs/mysql:/var/log/mysql
         environment:
             - MYSQL_ROOT_PASSWORD=secret
             - MYSQL_DATABASE=appdb
             - MYSQL_USER=appuser
             - MYSQL_PASSWORD=apppwd
-        volumes:
-            - ./containers/mysql/conf:/etc/mysql
-            - ./data:/var/lib/mysql
-            - ./logs/mysql:/var/log/mysql
+        ports:
+            - 3306:3306
